@@ -1,145 +1,338 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Morse Mystery</title>
 
     <style>
+
+        /* =========================
+           RESET
+        ========================= */
+
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
             min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #0f172a;
+            min-height: 100dvh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #1e3a5f 0%,
+                    #0f172a 50%,
+                    #020617 100%
+                );
+
             color: white;
+
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+
+            padding: 25px 15px;
+
+            overflow-x: hidden;
         }
+
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
 
         .game-container {
             width: 100%;
-            max-width: 500px;
-            background: #1e293b;
-            border-radius: 24px;
-            padding: 25px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            max-width: 950px;
+
+            background:
+                rgba(15, 23, 42, 0.97);
+
+            border:
+                1px solid rgba(56, 189, 248, 0.25);
+
+            border-radius: 28px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 25px 70px
+                rgba(0, 0, 0, 0.55);
+
+            animation:
+                fadeIn 0.5s ease;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
             text-align: center;
+            margin-bottom: 28px;
         }
 
         .logo {
-            font-size: 14px;
-            letter-spacing: 4px;
             color: #38bdf8;
-            margin-bottom: 10px;
+
+            font-size: 12px;
+
             font-weight: bold;
+
+            letter-spacing: 5px;
+
+            margin-bottom: 10px;
         }
 
         h1 {
-            font-size: 36px;
-            margin-bottom: 8px;
+            font-size:
+                clamp(30px, 5vw, 48px);
+
+            margin-bottom: 10px;
         }
 
         .subtitle {
             color: #94a3b8;
-            font-size: 14px;
-            margin-bottom: 25px;
+
+            font-size:
+                clamp(13px, 2vw, 16px);
         }
 
+
+        /* =========================
+           DESKTOP GAME LAYOUT
+        ========================= */
+
+        .game-content {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.6fr)
+                minmax(260px, 0.8fr);
+
+            gap: 25px;
+        }
+
+
+        /* =========================
+           STATS
+        ========================= */
+
         .stats {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 10px;
-            margin-bottom: 25px;
+
+            margin-bottom: 18px;
         }
 
         .stat {
-            flex: 1;
-            background: #0f172a;
-            padding: 12px;
-            border-radius: 14px;
+            background: #1e293b;
+
+            border:
+                1px solid #334155;
+
+            border-radius: 15px;
+
+            padding: 13px;
+
+            text-align: center;
         }
 
-        .stat span {
+        .stat-label {
             display: block;
-            color: #94a3b8;
-            font-size: 12px;
-            margin-bottom: 4px;
+
+            color: #64748b;
+
+            font-size: 10px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 5px;
         }
 
-        .stat strong {
-            font-size: 20px;
+        .stat-value {
             color: #38bdf8;
+
+            font-size:
+                clamp(18px, 3vw, 24px);
+
+            font-weight: bold;
         }
+
+
+        /* =========================
+           MORSE BOX
+        ========================= */
 
         .morse-box {
+            min-height: 230px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
             background: #020617;
-            border: 2px solid #334155;
-            border-radius: 18px;
-            padding: 30px 15px;
-            margin-bottom: 20px;
-            overflow-wrap: anywhere;
+
+            border:
+                2px solid #334155;
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            margin-bottom: 18px;
+
+            overflow: hidden;
         }
 
         .morse-label {
             color: #64748b;
-            font-size: 12px;
-            letter-spacing: 2px;
-            margin-bottom: 15px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            letter-spacing: 3px;
+
+            margin-bottom: 20px;
         }
 
         #morseCode {
-            font-family: "Courier New", monospace;
-            font-size: clamp(20px, 6vw, 32px);
-            line-height: 1.6;
-            letter-spacing: 3px;
-            color: #f8fafc;
-            word-break: break-word;
-        }
-
-        input {
             width: 100%;
-            padding: 16px;
-            border: 2px solid #334155;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size:
+                clamp(17px, 3vw, 30px);
+
+            font-weight: bold;
+
+            line-height: 1.8;
+
+            letter-spacing:
+                clamp(1px, 0.5vw, 4px);
+
+            overflow-wrap: anywhere;
+
+            word-break: break-word;
+
+            color: #f8fafc;
+        }
+
+
+        /* =========================
+           ANSWER AREA
+        ========================= */
+
+        .answer-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #answerInput {
+            flex: 1;
+
+            min-width: 0;
+
+            height: 55px;
+
+            padding: 0 16px;
+
+            border:
+                2px solid #334155;
+
             border-radius: 14px;
-            background: #0f172a;
+
+            background: #1e293b;
+
             color: white;
+
+            font-size: 16px;
+
             outline: none;
-            font-size: 17px;
-            text-align: center;
-            margin-bottom: 12px;
+
+            transition: 0.2s;
         }
 
-        input:focus {
+        #answerInput:focus {
             border-color: #38bdf8;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(56, 189, 248, 0.12);
         }
 
-        input::placeholder {
-            color: #64748b;
-        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
 
         button {
-            width: 100%;
+            min-height: 52px;
+
             border: none;
-            padding: 15px;
+
             border-radius: 14px;
-            font-size: 16px;
+
+            padding: 12px 18px;
+
+            font-size: 14px;
+
             font-weight: bold;
+
             cursor: pointer;
-            transition: 0.2s;
-            margin-top: 8px;
+
+            touch-action: manipulation;
+
+            transition:
+                transform 0.15s,
+                opacity 0.15s,
+                background 0.15s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
         }
 
         button:active {
             transform: scale(0.97);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .decode-btn {
@@ -151,30 +344,51 @@
             background: #7dd3fc;
         }
 
+
+        /* =========================
+           CONTROLS
+        ========================= */
+
+        .controls {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 10px;
+
+            margin-top: 10px;
+        }
+
         .hint-btn {
             background: #334155;
             color: white;
         }
 
-        .hint-btn:hover {
-            background: #475569;
-        }
-
         .new-btn {
             background: transparent;
-            border: 1px solid #475569;
+
             color: #cbd5e1;
+
+            border:
+                1px solid #475569;
         }
 
-        .new-btn:hover {
-            background: #334155;
-        }
+
+        /* =========================
+           MESSAGE
+        ========================= */
 
         #message {
-            min-height: 30px;
-            margin-top: 18px;
+            min-height: 28px;
+
+            margin-top: 14px;
+
+            text-align: center;
+
+            font-size: 14px;
+
             font-weight: bold;
-            font-size: 15px;
         }
 
         .success {
@@ -189,154 +403,647 @@
             color: #facc15;
         }
 
-        .instructions {
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #334155;
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .side-section {
+            background: #1e293b;
+
+            border:
+                1px solid #334155;
+
+            border-radius: 20px;
+
+            padding: 22px;
+        }
+
+        .side-title {
+            font-size: 20px;
+
+            margin-bottom: 15px;
+        }
+
+        .side-text {
             color: #94a3b8;
-            font-size: 12px;
-            line-height: 1.6;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+
+            margin-bottom: 18px;
+        }
+
+        .reference-button {
+            width: 100%;
+
+            background: #0f172a;
+
+            border:
+                1px solid #475569;
+
+            color: #cbd5e1;
         }
 
         .morse-table {
             display: none;
-            margin-top: 15px;
-            text-align: left;
-            background: #0f172a;
+
+            margin-top: 12px;
+
             padding: 15px;
+
+            background: #020617;
+
             border-radius: 12px;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size: 12px;
+
+            line-height: 2;
+
             color: #cbd5e1;
-            font-family: monospace;
-            font-size: 13px;
-            line-height: 1.8;
         }
 
-        .show {
+        .morse-table.show {
             display: block;
         }
 
-        @media (max-width: 400px) {
+
+        /* =========================
+           ATTEMPT WARNING
+        ========================= */
+
+        .attempt-warning {
+            margin-top: 8px;
+
+            text-align: center;
+
+            font-size: 12px;
+
+            color: #fbbf24;
+        }
+
+
+        /* =========================
+           FAILURE MODAL
+        ========================= */
+
+        .modal-overlay {
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 999;
+
+            background:
+                rgba(0, 0, 0, 0.85);
+
+            justify-content: center;
+            align-items: center;
+
+            padding: 15px;
+
+            backdrop-filter:
+                blur(6px);
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .fail-modal {
+            width: 100%;
+            max-width: 420px;
+
+            background: #0f172a;
+
+            border:
+                2px solid #fb7185;
+
+            border-radius: 24px;
+
+            padding: 20px;
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 70px
+                rgba(0, 0, 0, 0.8);
+
+            animation:
+                modalPop 0.35s ease;
+        }
+
+        .fail-modal img {
+            width: 100%;
+
+            max-height: 380px;
+
+            object-fit: cover;
+
+            border-radius: 15px;
+
+            display: block;
+
+            margin-bottom: 18px;
+        }
+
+        .fail-modal h2 {
+            color: #fb7185;
+
+            font-size:
+                clamp(26px, 7vw, 38px);
+
+            margin-bottom: 10px;
+        }
+
+        .fail-modal p {
+            color: #cbd5e1;
+
+            margin-bottom: 18px;
+
+            line-height: 1.5;
+        }
+
+        .retry-btn {
+            width: 100%;
+
+            background: #38bdf8;
+
+            color: #082f49;
+
+            font-size: 16px;
+        }
+
+
+        /* =========================
+           ANIMATIONS
+        ========================= */
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        @keyframes modalPop {
+
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+        }
+
+
+        /* =========================
+           TABLET
+        ========================= */
+
+        @media (max-width: 750px) {
+
+            body {
+                align-items: flex-start;
+                padding: 18px 12px;
+            }
+
             .game-container {
-                padding: 18px;
-                border-radius: 18px;
+                max-width: 600px;
+                padding: 25px 18px;
+            }
+
+            .game-content {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 500px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .game-container {
+                padding: 20px 13px;
+                border-radius: 20px;
             }
 
             h1 {
                 font-size: 30px;
             }
 
-            #morseCode {
-                font-size: 20px;
+            .stats {
+                gap: 6px;
+            }
+
+            .stat {
+                padding: 10px 4px;
+            }
+
+            .stat-label {
+                font-size: 8px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .morse-box {
+                min-height: 180px;
+                padding: 20px 10px;
+            }
+
+            .morse-label {
+                font-size: 9px;
                 letter-spacing: 2px;
             }
 
-            .stat strong {
+            #morseCode {
                 font-size: 17px;
+                letter-spacing: 1px;
             }
+
+            .answer-area {
+                flex-direction: column;
+            }
+
+            #answerInput {
+                width: 100%;
+                text-align: center;
+            }
+
+            .decode-btn {
+                width: 100%;
+            }
+
+            .side-section {
+                padding: 18px;
+            }
+
+            .fail-modal {
+                padding: 15px;
+            }
+
+            .fail-modal img {
+                max-height: 330px;
+            }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
     <main class="game-container">
 
-        <div class="logo">MORSE PUZZLE</div>
 
-        <h1>🕵️ Morse Mystery</h1>
+        <!-- HEADER -->
 
-        <p class="subtitle">
-            Decode the hidden message.
-        </p>
+        <header class="header">
 
-        <div class="stats">
-            <div class="stat">
-                <span>SCORE</span>
-                <strong id="score">0</strong>
+            <div class="logo">
+                MORSE PUZZLE
             </div>
 
-            <div class="stat">
-                <span>ATTEMPTS</span>
-                <strong id="attempts">0</strong>
-            </div>
+            <h1>
+                🕵️ Morse Mystery
+            </h1>
 
-            <div class="stat">
-                <span>PUZZLE</span>
-                <strong id="puzzleNumber">1</strong>
-            </div>
-        </div>
+            <p class="subtitle">
+                Decode the hidden message... if you can. 😈
+            </p>
 
-        <section class="morse-box">
+        </header>
 
-            <div class="morse-label">
-                DECODE THIS MESSAGE
-            </div>
 
-            <div id="morseCode">
-                Loading...
-            </div>
+        <div class="game-content">
 
-        </section>
 
-        <input
-            type="text"
-            id="answerInput"
-            placeholder="Type your answer..."
-            autocomplete="off"
-            autocapitalize="characters"
-        >
+            <!-- PUZZLE SECTION -->
 
-        <button class="decode-btn" onclick="checkAnswer()">
-            🔓 DECODE
-        </button>
+            <section>
 
-        <button class="hint-btn" onclick="showHint()">
-            💡 HINT
-        </button>
 
-        <button class="new-btn" onclick="newPuzzle()">
-            🔄 NEW PUZZLE
-        </button>
+                <!-- STATS -->
 
-        <div id="message"></div>
+                <div class="stats">
 
-        <div class="instructions">
-            <strong>How to play</strong><br>
-            Decode the Morse code and enter the hidden message.
-            Solve the puzzle correctly to unlock the surprise. 👀
-        </div>
+                    <div class="stat">
 
-        <button class="hint-btn" onclick="toggleMorseTable()">
-            📖 Morse Reference
-        </button>
+                        <span class="stat-label">
+                            SCORE
+                        </span>
 
-        <div id="morseTable" class="morse-table">
-            A .- &nbsp;&nbsp; B -... &nbsp;&nbsp; C -.-.<br>
-            D -.. &nbsp;&nbsp; E . &nbsp;&nbsp; F ..-.<br>
-            G --. &nbsp;&nbsp; H .... &nbsp;&nbsp; I ..<br>
-            J .--- &nbsp;&nbsp; K -.- &nbsp;&nbsp; L .-..<br>
-            M -- &nbsp;&nbsp; N -. &nbsp;&nbsp; O ---<br>
-            P .--. &nbsp;&nbsp; Q --.- &nbsp;&nbsp; R .-.<br>
-            S ... &nbsp;&nbsp; T - &nbsp;&nbsp; U ..-<br>
-            V ...- &nbsp;&nbsp; W .-- &nbsp;&nbsp; X -..-<br>
-            Y -.-- &nbsp;&nbsp; Z --..<br><br>
+                        <span
+                            class="stat-value"
+                            id="score"
+                        >
+                            0
+                        </span>
 
-            0 ----- &nbsp;&nbsp; 1 .---- &nbsp;&nbsp; 2 ..---<br>
-            3 ...-- &nbsp;&nbsp; 4 ....- &nbsp;&nbsp; 5 .....<br>
-            6 -.... &nbsp;&nbsp; 7 --... &nbsp;&nbsp; 8 ---..<br>
-            9 ----.
+                    </div>
+
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            ATTEMPTS
+                        </span>
+
+                        <span
+                            class="stat-value"
+                            id="attempts"
+                        >
+                            0 / 3
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            PUZZLE
+                        </span>
+
+                        <span
+                            class="stat-value"
+                            id="puzzleNumber"
+                        >
+                            1
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MORSE PUZZLE -->
+
+                <div class="morse-box">
+
+                    <div class="morse-label">
+                        DECODE THIS MESSAGE
+                    </div>
+
+                    <div id="morseCode">
+                        Loading...
+                    </div>
+
+                </div>
+
+
+                <!-- ANSWER -->
+
+                <div class="answer-area">
+
+                    <input
+                        type="text"
+                        id="answerInput"
+                        placeholder="Enter your answer..."
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="characters"
+                        spellcheck="false"
+                    >
+
+                    <button
+                        class="decode-btn"
+                        id="decodeButton"
+                    >
+                        🔓 DECODE
+                    </button>
+
+                </div>
+
+
+                <!-- HINT + NEW -->
+
+                <div class="controls">
+
+                    <button
+                        class="hint-btn"
+                        id="hintButton"
+                    >
+                        💡 HINT
+                    </button>
+
+                    <button
+                        class="new-btn"
+                        id="newButton"
+                    >
+                        🔄 NEW PUZZLE
+                    </button>
+
+                </div>
+
+
+                <!-- MESSAGE -->
+
+                <div id="message"></div>
+
+                <div
+                    class="attempt-warning"
+                    id="attemptWarning"
+                >
+                    You have 3 attempts!
+                </div>
+
+            </section>
+
+
+            <!-- SIDEBAR -->
+
+            <aside class="side-section">
+
+                <h2 class="side-title">
+                    🧩 How To Play
+                </h2>
+
+                <div class="side-text">
+
+                    Decode the Morse code and type
+                    your answer.
+
+                    <br><br>
+
+                    You only have
+                    <strong>3 attempts</strong>
+                    for each puzzle.
+
+                    <br><br>
+
+                    Get it correct and unlock
+                    the surprise. 🎵
+
+                    <br><br>
+
+                    Fail all 3 attempts...
+
+                    <br><br>
+
+                    Well... 😈
+
+                </div>
+
+
+                <button
+                    class="reference-button"
+                    id="referenceButton"
+                >
+                    📖 Morse Reference
+                </button>
+
+
+                <div
+                    class="morse-table"
+                    id="morseTable"
+                >
+
+                    A .- &nbsp;
+                    B -... &nbsp;
+                    C -.-. &nbsp;
+                    D -.. &nbsp;
+                    E . &nbsp;
+                    F ..-.<br>
+
+                    G --. &nbsp;
+                    H .... &nbsp;
+                    I .. &nbsp;
+                    J .--- &nbsp;
+                    K -.- &nbsp;
+                    L .-..<br>
+
+                    M -- &nbsp;
+                    N -. &nbsp;
+                    O --- &nbsp;
+                    P .--. &nbsp;
+                    Q --.- &nbsp;
+                    R .-.<br>
+
+                    S ... &nbsp;
+                    T - &nbsp;
+                    U ..- &nbsp;
+                    V ...- &nbsp;
+                    W .-- &nbsp;
+                    X -..-<br>
+
+                    Y -.-- &nbsp;
+                    Z --..<br><br>
+
+                    0 ----- &nbsp;
+                    1 .---- &nbsp;
+                    2 ..--- &nbsp;
+                    3 ...-- &nbsp;
+                    4 ....-<br>
+
+                    5 ..... &nbsp;
+                    6 -.... &nbsp;
+                    7 --... &nbsp;
+                    8 ---.. &nbsp;
+                    9 ----.
+
+                </div>
+
+            </aside>
+
         </div>
 
     </main>
 
 
+    <!-- =========================
+         FAILURE MODAL
+    ========================== -->
+
+    <div
+        class="modal-overlay"
+        id="failModal"
+    >
+
+        <div class="fail-modal">
+
+            <!-- YOUR MEME IMAGE -->
+
+            <img
+                src="meme.png"
+                alt="EH ENGOT Meme"
+            >
+
+            <h2>
+                EH. ENGOT! 😂
+            </h2>
+
+            <p>
+                You used all 3 attempts!
+                Better luck next time. 😭
+            </p>
+
+            <button
+                class="retry-btn"
+                id="retryButton"
+            >
+                🔄 TRY ANOTHER PUZZLE
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SOUND EFFECT
+    ========================== -->
+
+    <audio
+        id="failSound"
+        preload="auto"
+    >
+        <source
+            src="engot.mp3"
+            type="audio/mpeg"
+        >
+    </audio>
+
+
     <script>
 
-        // ==========================================
-        // MORSE CODE DICTIONARY
-        // ==========================================
+
+        /* =========================
+           MORSE DICTIONARY
+        ========================== */
 
         const morse = {
+
             A: ".-",
             B: "-...",
             C: "-.-.",
@@ -374,68 +1081,112 @@
             7: "--...",
             8: "---..",
             9: "----."
+
         };
 
 
-        // ==========================================
-        // PUZZLES
-        // ==========================================
+        /* =========================
+           PUZZLES
+        ========================== */
 
         const puzzles = [
 
             "HELLO",
-
             "MORSE",
-
             "PUZZLE",
-
             "SECRET",
-
             "MYSTERY",
-
             "GOOD LUCK",
-
             "HIDDEN MESSAGE",
-
             "KEEP TRYING",
-
             "YOU FOUND IT",
-
             "CONGRATULATIONS",
-
             "NEVER GIVE UP",
-
             "FOLLOW THE SIGNAL",
-
             "DECODE THIS",
-
             "ARE YOU READY",
-
             "THE ANSWER",
-
             "MISSION COMPLETE",
-
             "WELCOME",
-
             "GOOD JOB",
-
-            "TRY AGAIN",
-
-            "SECRET MESSAGE"
+            "SECRET MESSAGE",
+            "FIND THE ANSWER"
 
         ];
 
 
+        /* =========================
+           GAME VARIABLES
+        ========================== */
+
         let currentAnswer = "";
+
         let score = 0;
+
         let attempts = 0;
+
         let puzzleNumber = 1;
+
         let hintUsed = false;
 
+        let lastPuzzle = -1;
 
-        // ==========================================
-        // CONVERT TEXT TO MORSE
-        // ==========================================
+        const MAX_ATTEMPTS = 3;
+
+
+        /* =========================
+           ELEMENTS
+        ========================== */
+
+        const morseCode =
+            document.getElementById("morseCode");
+
+        const answerInput =
+            document.getElementById("answerInput");
+
+        const scoreDisplay =
+            document.getElementById("score");
+
+        const attemptsDisplay =
+            document.getElementById("attempts");
+
+        const puzzleDisplay =
+            document.getElementById("puzzleNumber");
+
+        const message =
+            document.getElementById("message");
+
+        const attemptWarning =
+            document.getElementById("attemptWarning");
+
+        const decodeButton =
+            document.getElementById("decodeButton");
+
+        const hintButton =
+            document.getElementById("hintButton");
+
+        const newButton =
+            document.getElementById("newButton");
+
+        const failModal =
+            document.getElementById("failModal");
+
+        const retryButton =
+            document.getElementById("retryButton");
+
+        const failSound =
+            document.getElementById("failSound");
+
+        const referenceButton =
+            document.getElementById("referenceButton");
+
+        const morseTable =
+            document.getElementById("morseTable");
+
+
+        /* =========================
+           TEXT TO MORSE
+        ========================== */
 
         function textToMorse(text) {
 
@@ -445,7 +1196,9 @@
                 .map(character => {
 
                     if (character === " ") {
+
                         return "/";
+
                     }
 
                     return morse[character] || "";
@@ -456,181 +1209,476 @@
         }
 
 
-        // ==========================================
-        // CREATE RANDOM PUZZLE
-        // ==========================================
+        /* =========================
+           UPDATE ATTEMPTS
+        ========================== */
 
-        function newPuzzle() {
+        function updateAttempts() {
 
-            const randomIndex =
-                Math.floor(Math.random() * puzzles.length);
+            attemptsDisplay.textContent =
+                attempts + " / " + MAX_ATTEMPTS;
 
-            currentAnswer = puzzles[randomIndex];
 
-            document.getElementById("morseCode").textContent =
-                textToMorse(currentAnswer);
+            const remaining =
+                MAX_ATTEMPTS - attempts;
 
-            document.getElementById("answerInput").value = "";
 
-            document.getElementById("message").textContent = "";
+            if (remaining === 3) {
 
-            document.getElementById("message").className = "";
+                attemptWarning.textContent =
+                    "You have 3 attempts!";
 
-            hintUsed = false;
+            }
 
-            document.getElementById("puzzleNumber").textContent =
-                puzzleNumber;
+            else if (remaining === 2) {
 
-            document.getElementById("answerInput").focus();
+                attemptWarning.textContent =
+                    "⚠️ 2 attempts remaining!";
+
+            }
+
+            else if (remaining === 1) {
+
+                attemptWarning.textContent =
+                    "🚨 LAST CHANCE! Only 1 attempt remaining!";
+
+            }
 
         }
 
 
-        // ==========================================
-        // CHECK ANSWER
-        // ==========================================
+        /* =========================
+           CREATE NEW PUZZLE
+        ========================== */
+
+        function newPuzzle() {
+
+            let randomIndex;
+
+
+            do {
+
+                randomIndex =
+                    Math.floor(
+                        Math.random() *
+                        puzzles.length
+                    );
+
+            }
+
+            while (
+
+                puzzles.length > 1 &&
+                randomIndex === lastPuzzle
+
+            );
+
+
+            lastPuzzle =
+                randomIndex;
+
+
+            currentAnswer =
+                puzzles[randomIndex];
+
+
+            morseCode.textContent =
+                textToMorse(currentAnswer);
+
+
+            attempts = 0;
+
+            hintUsed = false;
+
+
+            answerInput.value = "";
+
+            answerInput.disabled = false;
+
+
+            decodeButton.disabled = false;
+
+
+            hintButton.disabled = false;
+
+
+            updateAttempts();
+
+
+            message.textContent = "";
+
+            message.className = "";
+
+
+            puzzleDisplay.textContent =
+                puzzleNumber;
+
+        }
+
+
+        /* =========================
+           CHECK ANSWER
+        ========================== */
 
         function checkAnswer() {
 
-            const input =
-                document.getElementById("answerInput")
-                .value
+            const userAnswer =
+                answerInput.value
                 .trim()
                 .toUpperCase();
 
-            const message =
-                document.getElementById("message");
 
-            if (input === "") {
+            if (userAnswer === "") {
 
                 message.textContent =
-                    "⚠️ Please enter an answer.";
+                    "⚠️ Enter your answer first!";
 
-                message.className = "error";
+                message.className =
+                    "error";
 
                 return;
+
             }
 
 
-            attempts++;
+            if (
+                attempts >= MAX_ATTEMPTS
+            ) {
 
-            document.getElementById("attempts").textContent =
-                attempts;
+                return;
+
+            }
 
 
-            if (input === currentAnswer) {
+            /* =====================
+               CORRECT
+            ====================== */
 
-                score += hintUsed ? 5 : 10;
+            if (
+                userAnswer === currentAnswer
+            ) {
 
-                document.getElementById("score").textContent =
+                score +=
+                    hintUsed ? 5 : 10;
+
+
+                scoreDisplay.textContent =
                     score;
 
+
                 message.textContent =
-                    "🎉 CORRECT! You solved the puzzle!";
-
-                message.className = "success";
+                    "🎉 CORRECT! You solved it!";
 
 
-                // Small delay before redirect
+                message.className =
+                    "success";
+
+
+                decodeButton.disabled =
+                    true;
+
+
+                answerInput.disabled =
+                    true;
+
+
                 setTimeout(() => {
 
                     window.location.href =
                         "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
-                }, 1200);
+                }, 1500);
+
+
+                return;
 
             }
 
-            else {
 
-                message.textContent =
-                    "❌ Incorrect. Try again!";
+            /* =====================
+               WRONG ANSWER
+            ====================== */
 
-                message.className = "error";
+            attempts++;
+
+
+            updateAttempts();
+
+
+            message.textContent =
+                "❌ Wrong answer!";
+
+
+            message.className =
+                "error";
+
+
+            /* SHAKE EFFECT */
+
+            answerInput.animate(
+
+                [
+
+                    {
+                        transform:
+                            "translateX(0)"
+                    },
+
+                    {
+                        transform:
+                            "translateX(-8px)"
+                    },
+
+                    {
+                        transform:
+                            "translateX(8px)"
+                    },
+
+                    {
+                        transform:
+                            "translateX(-6px)"
+                    },
+
+                    {
+                        transform:
+                            "translateX(6px)"
+                    },
+
+                    {
+                        transform:
+                            "translateX(0)"
+                    }
+
+                ],
+
+                {
+
+                    duration: 350
+
+                }
+
+            );
+
+
+            /* =====================
+               FAILED ALL ATTEMPTS
+            ====================== */
+
+            if (
+                attempts >= MAX_ATTEMPTS
+            ) {
+
+                setTimeout(() => {
+
+                    showFailModal();
+
+                }, 500);
 
             }
 
         }
 
 
-        // ==========================================
-        // HINT
-        // ==========================================
+        /* =========================
+           SHOW FAILURE MODAL
+        ========================== */
+
+        function showFailModal() {
+
+            answerInput.disabled =
+                true;
+
+
+            decodeButton.disabled =
+                true;
+
+
+            hintButton.disabled =
+                true;
+
+
+            /* RESET SOUND */
+
+            failSound.currentTime = 0;
+
+
+            /* PLAY EH ENGOT SOUND */
+
+            failSound.play()
+                .catch(error => {
+
+                    console.log(
+                        "Sound needs user interaction."
+                    );
+
+                });
+
+
+            /* SHOW MODAL */
+
+            failModal.classList.add(
+                "show"
+            );
+
+        }
+
+
+        /* =========================
+           RETRY
+        ========================== */
+
+        function retryGame() {
+
+            /* STOP SOUND */
+
+            failSound.pause();
+
+            failSound.currentTime = 0;
+
+
+            /* CLOSE MODAL */
+
+            failModal.classList.remove(
+                "show"
+            );
+
+
+            /* NEXT PUZZLE */
+
+            puzzleNumber++;
+
+
+            newPuzzle();
+
+        }
+
+
+        /* =========================
+           HINT
+        ========================== */
 
         function showHint() {
-
-            const message =
-                document.getElementById("message");
 
             if (hintUsed) {
 
                 message.textContent =
-                    "💡 You already used the hint.";
+                    "💡 Hint already used!";
 
-                message.className = "hint";
+                message.className =
+                    "hint";
 
                 return;
+
             }
 
+
             hintUsed = true;
+
 
             const firstLetter =
                 currentAnswer.charAt(0);
 
-            const numberOfLetters =
-                currentAnswer.replace(/ /g, "").length;
+
+            const letterCount =
+                currentAnswer
+                .replace(/ /g, "")
+                .length;
+
 
             message.textContent =
-                "💡 Hint: It starts with \"" +
-                firstLetter +
-                "\" and has " +
-                numberOfLetters +
-                " letters.";
+                `💡 Starts with "${firstLetter}" • ${letterCount} letters`;
 
-            message.className = "hint";
+
+            message.className =
+                "hint";
 
         }
 
 
-        // ==========================================
-        // MORSE REFERENCE
-        // ==========================================
+        /* =========================
+           MORSE REFERENCE
+        ========================== */
 
-        function toggleMorseTable() {
+        function toggleReference() {
 
-            const table =
-                document.getElementById("morseTable");
-
-            table.classList.toggle("show");
+            morseTable.classList.toggle(
+                "show"
+            );
 
         }
 
 
-        // ==========================================
-        // ENTER KEY SUPPORT
-        // ==========================================
+        /* =========================
+           BUTTON EVENTS
+        ========================== */
 
-        document
-            .getElementById("answerInput")
-            .addEventListener("keydown", function(event) {
+        decodeButton.addEventListener(
+            "click",
+            checkAnswer
+        );
 
-                if (event.key === "Enter") {
+
+        hintButton.addEventListener(
+            "click",
+            showHint
+        );
+
+
+        newButton.addEventListener(
+            "click",
+            () => {
+
+                puzzleNumber++;
+
+                newPuzzle();
+
+            }
+        );
+
+
+        retryButton.addEventListener(
+            "click",
+            retryGame
+        );
+
+
+        referenceButton.addEventListener(
+            "click",
+            toggleReference
+        );
+
+
+        /* =========================
+           ENTER KEY
+        ========================== */
+
+        answerInput.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
 
                     checkAnswer();
 
                 }
 
-            });
+            }
+        );
 
 
-        // ==========================================
-        // START GAME
-        // ==========================================
+        /* =========================
+           START GAME
+        ========================== */
 
         newPuzzle();
+
 
     </script>
 
 </body>
+
 </html>
-```
