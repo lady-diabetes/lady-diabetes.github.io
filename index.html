@@ -1,0 +1,636 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Morse Mystery</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0f172a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 500px;
+            background: #1e293b;
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 14px;
+            letter-spacing: 4px;
+            color: #38bdf8;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            flex: 1;
+            background: #0f172a;
+            padding: 12px;
+            border-radius: 14px;
+        }
+
+        .stat span {
+            display: block;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .stat strong {
+            font-size: 20px;
+            color: #38bdf8;
+        }
+
+        .morse-box {
+            background: #020617;
+            border: 2px solid #334155;
+            border-radius: 18px;
+            padding: 30px 15px;
+            margin-bottom: 20px;
+            overflow-wrap: anywhere;
+        }
+
+        .morse-label {
+            color: #64748b;
+            font-size: 12px;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        #morseCode {
+            font-family: "Courier New", monospace;
+            font-size: clamp(20px, 6vw, 32px);
+            line-height: 1.6;
+            letter-spacing: 3px;
+            color: #f8fafc;
+            word-break: break-word;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #334155;
+            border-radius: 14px;
+            background: #0f172a;
+            color: white;
+            outline: none;
+            font-size: 17px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        input:focus {
+            border-color: #38bdf8;
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        button {
+            width: 100%;
+            border: none;
+            padding: 15px;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 8px;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .decode-btn {
+            background: #38bdf8;
+            color: #082f49;
+        }
+
+        .decode-btn:hover {
+            background: #7dd3fc;
+        }
+
+        .hint-btn {
+            background: #334155;
+            color: white;
+        }
+
+        .hint-btn:hover {
+            background: #475569;
+        }
+
+        .new-btn {
+            background: transparent;
+            border: 1px solid #475569;
+            color: #cbd5e1;
+        }
+
+        .new-btn:hover {
+            background: #334155;
+        }
+
+        #message {
+            min-height: 30px;
+            margin-top: 18px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .success {
+            color: #4ade80;
+        }
+
+        .error {
+            color: #fb7185;
+        }
+
+        .hint {
+            color: #facc15;
+        }
+
+        .instructions {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .morse-table {
+            display: none;
+            margin-top: 15px;
+            text-align: left;
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 12px;
+            color: #cbd5e1;
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .show {
+            display: block;
+        }
+
+        @media (max-width: 400px) {
+            .game-container {
+                padding: 18px;
+                border-radius: 18px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            #morseCode {
+                font-size: 20px;
+                letter-spacing: 2px;
+            }
+
+            .stat strong {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="game-container">
+
+        <div class="logo">MORSE PUZZLE</div>
+
+        <h1>🕵️ Morse Mystery</h1>
+
+        <p class="subtitle">
+            Decode the hidden message.
+        </p>
+
+        <div class="stats">
+            <div class="stat">
+                <span>SCORE</span>
+                <strong id="score">0</strong>
+            </div>
+
+            <div class="stat">
+                <span>ATTEMPTS</span>
+                <strong id="attempts">0</strong>
+            </div>
+
+            <div class="stat">
+                <span>PUZZLE</span>
+                <strong id="puzzleNumber">1</strong>
+            </div>
+        </div>
+
+        <section class="morse-box">
+
+            <div class="morse-label">
+                DECODE THIS MESSAGE
+            </div>
+
+            <div id="morseCode">
+                Loading...
+            </div>
+
+        </section>
+
+        <input
+            type="text"
+            id="answerInput"
+            placeholder="Type your answer..."
+            autocomplete="off"
+            autocapitalize="characters"
+        >
+
+        <button class="decode-btn" onclick="checkAnswer()">
+            🔓 DECODE
+        </button>
+
+        <button class="hint-btn" onclick="showHint()">
+            💡 HINT
+        </button>
+
+        <button class="new-btn" onclick="newPuzzle()">
+            🔄 NEW PUZZLE
+        </button>
+
+        <div id="message"></div>
+
+        <div class="instructions">
+            <strong>How to play</strong><br>
+            Decode the Morse code and enter the hidden message.
+            Solve the puzzle correctly to unlock the surprise. 👀
+        </div>
+
+        <button class="hint-btn" onclick="toggleMorseTable()">
+            📖 Morse Reference
+        </button>
+
+        <div id="morseTable" class="morse-table">
+            A .- &nbsp;&nbsp; B -... &nbsp;&nbsp; C -.-.<br>
+            D -.. &nbsp;&nbsp; E . &nbsp;&nbsp; F ..-.<br>
+            G --. &nbsp;&nbsp; H .... &nbsp;&nbsp; I ..<br>
+            J .--- &nbsp;&nbsp; K -.- &nbsp;&nbsp; L .-..<br>
+            M -- &nbsp;&nbsp; N -. &nbsp;&nbsp; O ---<br>
+            P .--. &nbsp;&nbsp; Q --.- &nbsp;&nbsp; R .-.<br>
+            S ... &nbsp;&nbsp; T - &nbsp;&nbsp; U ..-<br>
+            V ...- &nbsp;&nbsp; W .-- &nbsp;&nbsp; X -..-<br>
+            Y -.-- &nbsp;&nbsp; Z --..<br><br>
+
+            0 ----- &nbsp;&nbsp; 1 .---- &nbsp;&nbsp; 2 ..---<br>
+            3 ...-- &nbsp;&nbsp; 4 ....- &nbsp;&nbsp; 5 .....<br>
+            6 -.... &nbsp;&nbsp; 7 --... &nbsp;&nbsp; 8 ---..<br>
+            9 ----.
+        </div>
+
+    </main>
+
+
+    <script>
+
+        // ==========================================
+        // MORSE CODE DICTIONARY
+        // ==========================================
+
+        const morse = {
+            A: ".-",
+            B: "-...",
+            C: "-.-.",
+            D: "-..",
+            E: ".",
+            F: "..-.",
+            G: "--.",
+            H: "....",
+            I: "..",
+            J: ".---",
+            K: "-.-",
+            L: ".-..",
+            M: "--",
+            N: "-.",
+            O: "---",
+            P: ".--.",
+            Q: "--.-",
+            R: ".-.",
+            S: "...",
+            T: "-",
+            U: "..-",
+            V: "...-",
+            W: ".--",
+            X: "-..-",
+            Y: "-.--",
+            Z: "--..",
+
+            0: "-----",
+            1: ".----",
+            2: "..---",
+            3: "...--",
+            4: "....-",
+            5: ".....",
+            6: "-....",
+            7: "--...",
+            8: "---..",
+            9: "----."
+        };
+
+
+        // ==========================================
+        // PUZZLES
+        // ==========================================
+
+        const puzzles = [
+
+            "HELLO",
+
+            "MORSE",
+
+            "PUZZLE",
+
+            "SECRET",
+
+            "MYSTERY",
+
+            "GOOD LUCK",
+
+            "HIDDEN MESSAGE",
+
+            "KEEP TRYING",
+
+            "YOU FOUND IT",
+
+            "CONGRATULATIONS",
+
+            "NEVER GIVE UP",
+
+            "FOLLOW THE SIGNAL",
+
+            "DECODE THIS",
+
+            "ARE YOU READY",
+
+            "THE ANSWER",
+
+            "MISSION COMPLETE",
+
+            "WELCOME",
+
+            "GOOD JOB",
+
+            "TRY AGAIN",
+
+            "SECRET MESSAGE"
+
+        ];
+
+
+        let currentAnswer = "";
+        let score = 0;
+        let attempts = 0;
+        let puzzleNumber = 1;
+        let hintUsed = false;
+
+
+        // ==========================================
+        // CONVERT TEXT TO MORSE
+        // ==========================================
+
+        function textToMorse(text) {
+
+            return text
+                .toUpperCase()
+                .split("")
+                .map(character => {
+
+                    if (character === " ") {
+                        return "/";
+                    }
+
+                    return morse[character] || "";
+
+                })
+                .join(" ");
+
+        }
+
+
+        // ==========================================
+        // CREATE RANDOM PUZZLE
+        // ==========================================
+
+        function newPuzzle() {
+
+            const randomIndex =
+                Math.floor(Math.random() * puzzles.length);
+
+            currentAnswer = puzzles[randomIndex];
+
+            document.getElementById("morseCode").textContent =
+                textToMorse(currentAnswer);
+
+            document.getElementById("answerInput").value = "";
+
+            document.getElementById("message").textContent = "";
+
+            document.getElementById("message").className = "";
+
+            hintUsed = false;
+
+            document.getElementById("puzzleNumber").textContent =
+                puzzleNumber;
+
+            document.getElementById("answerInput").focus();
+
+        }
+
+
+        // ==========================================
+        // CHECK ANSWER
+        // ==========================================
+
+        function checkAnswer() {
+
+            const input =
+                document.getElementById("answerInput")
+                .value
+                .trim()
+                .toUpperCase();
+
+            const message =
+                document.getElementById("message");
+
+            if (input === "") {
+
+                message.textContent =
+                    "⚠️ Please enter an answer.";
+
+                message.className = "error";
+
+                return;
+            }
+
+
+            attempts++;
+
+            document.getElementById("attempts").textContent =
+                attempts;
+
+
+            if (input === currentAnswer) {
+
+                score += hintUsed ? 5 : 10;
+
+                document.getElementById("score").textContent =
+                    score;
+
+                message.textContent =
+                    "🎉 CORRECT! You solved the puzzle!";
+
+                message.className = "success";
+
+
+                // Small delay before redirect
+                setTimeout(() => {
+
+                    window.location.href =
+                        "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+
+                }, 1200);
+
+            }
+
+            else {
+
+                message.textContent =
+                    "❌ Incorrect. Try again!";
+
+                message.className = "error";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // HINT
+        // ==========================================
+
+        function showHint() {
+
+            const message =
+                document.getElementById("message");
+
+            if (hintUsed) {
+
+                message.textContent =
+                    "💡 You already used the hint.";
+
+                message.className = "hint";
+
+                return;
+            }
+
+            hintUsed = true;
+
+            const firstLetter =
+                currentAnswer.charAt(0);
+
+            const numberOfLetters =
+                currentAnswer.replace(/ /g, "").length;
+
+            message.textContent =
+                "💡 Hint: It starts with \"" +
+                firstLetter +
+                "\" and has " +
+                numberOfLetters +
+                " letters.";
+
+            message.className = "hint";
+
+        }
+
+
+        // ==========================================
+        // MORSE REFERENCE
+        // ==========================================
+
+        function toggleMorseTable() {
+
+            const table =
+                document.getElementById("morseTable");
+
+            table.classList.toggle("show");
+
+        }
+
+
+        // ==========================================
+        // ENTER KEY SUPPORT
+        // ==========================================
+
+        document
+            .getElementById("answerInput")
+            .addEventListener("keydown", function(event) {
+
+                if (event.key === "Enter") {
+
+                    checkAnswer();
+
+                }
+
+            });
+
+
+        // ==========================================
+        // START GAME
+        // ==========================================
+
+        newPuzzle();
+
+    </script>
+
+</body>
+</html>
+```
